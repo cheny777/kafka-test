@@ -165,6 +165,8 @@ func main() {
 		}
 	}()
 
+	defer producer.Close()
+
 	/*consumer*/
 	consumer, err := NewConsumer("47.99.136.146", "1936", "demo")
 	if err != nil {
@@ -181,14 +183,13 @@ func main() {
 			}
 		}
 	}()
+	defer consumer.Close()
 
 	/****************************/
 	sigs := make(chan os.Signal, 1)
 	signal.Notify(sigs, syscall.SIGINT, syscall.SIGALRM)
 	select {
 	case <-sigs:
-
-		producer.Close()
 		fmt.Println(" close out ")
 		c = false
 	}
